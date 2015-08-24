@@ -52,7 +52,7 @@ lodash is also available in a variety of other builds & module formats.
 
 ## Features
 
- * ~100% [code coverage](https://coveralls.io/r/lodash)
+ * ~100% [code coverage](https://coveralls.io/github/lodash)
  * Follows [semantic versioning](http://semver.org/) for releases
  * [Lazily evaluated](http://filimanjaro.com/blog/2014/introducing-lazy-evaluation/) chaining
  * [_(…)](https://lodash.com/docs#_) supports implicit chaining
