@@ -142,36 +142,31 @@
   /** Used to match unescaped characters in compiled string literals. */
   var reUnescapedString = /['\n\r\u2028\u2029\\]/g;
 
-  /** Used to compose `reStrSymbol` and `reWord`. */
+  /** Used to compose `reAstral`, `reStrSymbol`, and `reWord`. */
   var rsAstralRange = '\\ud800-\\udfff',
       rsAstral = '[' + rsAstralRange + ']',
       rsDigits = '\\d+',
       rsLowers = '[a-z\\xdf-\\xf6\\xf8-\\xff]+',
       rsNonAstral = '[^' + rsAstralRange + ']',
       rsRegional = '(?:\\ud83c[\\udde6-\\uddff]){2}',
+      rsSurrPair = '[\\ud800-\\udbff][\\udc00-\\udfff]',
       rsUpper = '[A-Z\\xc0-\\xd6\\xd8-\\xde]',
       rsZWJ = '\\u200d',
-      rsSurrPair = '[\\ud800-\\udbff][\\udc00-\\udfff]',
-      rsSurrPairs = rsSurrPair + '(?:' + rsZWJ + rsSurrPair + ')*';
+      rsJoiner = '(?:' + rsZWJ + '(?:' + [rsNonAstral, rsRegional, rsSurrPair].join('|') + '))*',
+      rsSymbol = '(?:' + [rsNonAstral, rsRegional, rsSurrPair, rsAstral].join('|') + ')';
 
   /** Used to match code points from the astral planes. */
   var reAstral = RegExp(rsAstral);
 
   /** Used to match [string symbols](https://mathiasbynens.be/notes/javascript-unicode). */
-  var reStrSymbol = RegExp([
-    rsNonAstral,
-    rsRegional,
-    rsSurrPairs,
-    rsAstral
-  ].join('|'), 'g');
+  var reStrSymbol = RegExp(rsSymbol + rsJoiner, 'g');
 
   /** Used to match words to create compound words. */
   var reWord = RegExp([
     rsUpper + '+(?=' + rsUpper + rsLowers + ')',
     rsUpper + '?' + rsLowers,
     rsUpper + '+',
-    rsRegional,
-    rsSurrPairs,
+    '(?:' + rsRegional + '|' + rsSurrPair + ')' + rsJoiner,
     rsDigits
   ].join('|'), 'g');
 
